@@ -1,10 +1,11 @@
+import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
 
 class AppColor {
   // Basic Colors
   static const Color white = Color(0xFFFFFFFF);
   static const Color black = Color(0xFF000000);
-  static const Color transparent = Color(0xFF00FFFFFF);
+  static const Color transparent = Color(0xff00ffffff);
 
   // Primary Colors
   static const Color primary_5 = Color(0xFFF3F1FE);
@@ -209,16 +210,53 @@ class AppFontFamily {
   static TextStyle bold_12 = TextStyle(fontFamily: poppinsBold, fontSize: 12);
 
   static TextStyle bold_10 = TextStyle(fontFamily: poppinsBold, fontSize: 10);
+}
 
-  static TextStyle textLink = TextStyle(
-    fontFamily: poppinsSemiBold,
+class AppTheme {
+  static Color screenBg(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.dark
+        ? AppColor.neutral_100
+        : AppColor.white;
+  }
+
+  static String appLogo(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.dark
+        ? 'assets/images/logo_dark.png'
+        : 'assets/images/logo.png';
+  }
+
+  static Color checkBox(BuildContext context) =>
+      Theme.of(context).brightness == Brightness.dark
+          ? AppColor.white
+          : AppColor.black;
+
+  static Color onBoardingDot(BuildContext context) =>
+      Theme.of(context).brightness == Brightness.dark
+          ? AppColor.white.withOpacity(0.5)
+          : AppColor.black.withOpacity(0.5);
+
+  static Color onBoardingDotActive(BuildContext context) =>
+      Theme.of(context).brightness == Brightness.dark
+          ? AppColor.white
+          : AppColor.black;
+
+  static Color inputProgress(BuildContext context) =>
+      Theme.of(context).brightness == Brightness.dark
+          ? AppColor.neutral_60
+          : AppColor.neutral_80;
+
+  static TextStyle textLink(BuildContext context) => TextStyle(
+    fontFamily: AppFontFamily.poppinsSemiBold,
     fontSize: 14,
-    color: AppColor.accent_50,
+    color:
+        Theme.of(context).brightness == Brightness.dark
+            ? AppColor.white
+            : AppColor.neutral_80,
   );
 
   static TextStyle textLabel(BuildContext context) {
     return TextStyle(
-      fontFamily: poppinsRegular,
+      fontFamily: AppFontFamily.poppinsRegular,
       fontSize: 14,
       color:
           Theme.of(context).brightness == Brightness.dark
@@ -226,10 +264,10 @@ class AppFontFamily {
               : AppColor.neutral_80,
     );
   }
-  
+
   static TextStyle textTitle(BuildContext context) {
     return TextStyle(
-      fontFamily: poppinsSemiBold,
+      fontFamily: AppFontFamily.poppinsSemiBold,
       fontSize: 16,
       color:
           Theme.of(context).brightness == Brightness.dark
@@ -237,11 +275,25 @@ class AppFontFamily {
               : AppColor.neutral_80,
     );
   }
-  
-  static String appLogo(BuildContext context) {
-    return Theme.of(context).brightness == Brightness.dark
-              ? 'assets/images/logo_dark.png'
-              : 'assets/images/logo.png';
+
+  static BoxDecoration dialogBg(BuildContext context) {
+    return BoxDecoration(
+      color:
+          Theme.of(context).brightness == Brightness.dark
+              ? AppColor.neutral_100
+              : AppColor.white,
+      borderRadius: BorderRadius.circular(20),
+      boxShadow: [
+        BoxShadow(
+          color:
+              Theme.of(context).brightness == Brightness.dark
+                  ? AppColor.neutral_80.withOpacity(0.2)
+                  : AppColor.neutral_20.withOpacity(0.2),
+          blurRadius: 10,
+          offset: const Offset(0, 4),
+        ),
+      ],
+    );
   }
 }
 
@@ -251,14 +303,18 @@ class FlatButton extends StatelessWidget {
   final IconData? icon;
   final VoidCallback? onPressed;
   final bool disabled;
+  final bool loading;
+  final bool iconLeft;
 
   const FlatButton({
-    Key? key,
+    super.key,
     required this.text,
     this.icon,
     this.onPressed,
     this.disabled = false,
-  }) : super(key: key);
+    this.loading = false,
+    this.iconLeft = true,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -268,26 +324,102 @@ class FlatButton extends StatelessWidget {
     return Opacity(
       opacity: disabled ? 0.2 : 1.0,
       child: ElevatedButton(
-        onPressed: disabled ? null : onPressed,
+        onPressed: disabled || loading ? null : onPressed,
         style: ElevatedButton.styleFrom(
           disabledBackgroundColor:
-              isDark ? AppColor.primary_50 : AppColor.primary_50,
-          backgroundColor: isDark ? AppColor.primary_50 : AppColor.primary_50,
+              isDark ? AppColor.primary_50 : AppColor.black,
+          backgroundColor: isDark ? AppColor.white : AppColor.black,
           textStyle: AppFontFamily.medium_16,
           padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 20),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          overlayColor:
+              isDark
+                  ? AppColor.black.withOpacity(0.2)
+                  : AppColor.white.withOpacity(0.2),
         ),
         child:
-            icon != null
+            loading
+                ? const SizedBox(
+                  width: 24,
+                  height: 24,
+                  child: CircularProgressIndicator(
+                    color: Colors.white,
+                    strokeWidth: 2,
+                  ),
+                )
+                : icon != null
                 ? Row(
                   mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(icon, color: Colors.white),
-                    const SizedBox(width: 12),
-                    Text(text, style: const TextStyle(color: Colors.white)),
-                  ],
+                  children:
+                      iconLeft
+                          ? [
+                            Icon(
+                              icon,
+                              color:
+                                  disabled
+                                      ? (isDark
+                                          ? AppColor.white
+                                          : AppColor.white)
+                                      : (isDark
+                                          ? AppColor.neutral_100
+                                          : AppColor.white),
+                            ),
+                            const SizedBox(width: 12),
+                            Text(
+                              text,
+                              style: TextStyle(
+                                color:
+                                    disabled
+                                        ? (isDark
+                                            ? AppColor.white
+                                            : AppColor.white)
+                                        : (isDark
+                                            ? AppColor.neutral_100
+                                            : AppColor.white),
+                              ),
+                            ),
+                          ]
+                          : [
+                            Text(
+                              text,
+                              style: TextStyle(
+                                color:
+                                    disabled
+                                        ? (isDark
+                                            ? AppColor.white
+                                            : AppColor.white)
+                                        : (isDark
+                                            ? AppColor.neutral_100
+                                            : AppColor.white),
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Icon(
+                              icon,
+                              color:
+                                  disabled
+                                      ? (isDark
+                                          ? AppColor.white
+                                          : AppColor.white)
+                                      : (isDark
+                                          ? AppColor.neutral_100
+                                          : AppColor.white),
+                            ),
+                          ],
                 )
-                : Text(text, style: const TextStyle(color: Colors.white)),
+                : Text(
+                  text,
+                  style: TextStyle(
+                    color:
+                        disabled
+                            ? isDark
+                                ? AppColor.white
+                                : AppColor.white
+                            : isDark
+                            ? AppColor.neutral_100
+                            : AppColor.white,
+                  ),
+                ),
       ),
     );
   }
@@ -304,8 +436,8 @@ class OutlineButton extends StatelessWidget {
     this.icon,
     this.onPressed,
     this.disabled = false,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -318,27 +450,28 @@ class OutlineButton extends StatelessWidget {
         onPressed: disabled ? null : onPressed,
         style: OutlinedButton.styleFrom(
           side: BorderSide(
-            color: isDark ? AppColor.neutral_20 : AppColor.primary_50,
+            color: isDark ? AppColor.neutral_20 : AppColor.black,
             width: 1,
           ),
           textStyle: AppFontFamily.medium_16,
           padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 20),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          overlayColor:
+              isDark
+                  ? AppColor.white.withOpacity(0.2)
+                  : AppColor.black.withOpacity(0.2),
         ),
         child:
             icon != null
                 ? Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(
-                      icon,
-                      color: isDark ? Colors.white : AppColor.primary_50,
-                    ),
+                    Icon(icon, color: isDark ? Colors.white : AppColor.black),
                     const SizedBox(width: 12),
                     Text(
                       text,
                       style: TextStyle(
-                        color: isDark ? Colors.white : AppColor.primary_50,
+                        color: isDark ? Colors.white : AppColor.black,
                       ),
                     ),
                   ],
@@ -346,7 +479,7 @@ class OutlineButton extends StatelessWidget {
                 : Text(
                   text,
                   style: TextStyle(
-                    color: isDark ? Colors.white : AppColor.primary_50,
+                    color: isDark ? Colors.white : AppColor.black,
                   ),
                 ),
       ),
@@ -365,8 +498,8 @@ class GhostButton extends StatelessWidget {
     this.icon,
     this.onPressed,
     this.disabled = false,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -382,21 +515,22 @@ class GhostButton extends StatelessWidget {
           textStyle: AppFontFamily.medium_16,
           padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 20),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          overlayColor:
+              isDark
+                  ? AppColor.white.withOpacity(0.2)
+                  : AppColor.black.withOpacity(0.2),
         ),
         child:
             icon != null
                 ? Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(
-                      icon,
-                      color: isDark ? Colors.white : AppColor.primary_50,
-                    ),
+                    Icon(icon, color: isDark ? Colors.white : AppColor.black),
                     const SizedBox(width: 12),
                     Text(
                       text,
                       style: TextStyle(
-                        color: isDark ? Colors.white : AppColor.primary_50,
+                        color: isDark ? Colors.white : AppColor.black,
                       ),
                     ),
                   ],
@@ -404,7 +538,7 @@ class GhostButton extends StatelessWidget {
                 : Text(
                   text,
                   style: TextStyle(
-                    color: isDark ? Colors.white : AppColor.primary_50,
+                    color: isDark ? Colors.white : AppColor.black,
                   ),
                 ),
       ),
@@ -431,9 +565,13 @@ class AppInputDecoration {
       fillColor: isDark ? AppColor.neutral_90 : AppColor.neutral_5,
       hoverColor: AppColor.transparent,
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      iconColor: isDark ? AppColor.neutral_70 : AppColor.neutral_10,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8),
-        borderSide: BorderSide(color: AppColor.primary_50, width: 1),
+        borderSide: BorderSide(
+          color: isDark ? AppColor.neutral_80 : AppColor.neutral_20,
+          width: 1,
+        ),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8),
@@ -441,23 +579,37 @@ class AppInputDecoration {
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8),
-        borderSide: BorderSide(color: AppColor.primary_50, width: 1),
+        borderSide: BorderSide(
+          color: isDark ? AppColor.neutral_80 : AppColor.neutral_20,
+          width: 1,
+        ),
       ),
       errorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8),
         borderSide: BorderSide(
-          color: AppColor.accent_50, // Same for both themes
+          color:
+              isDark
+                  ? AppColor.neutral_60
+                  : AppColor.black, // Same for both themes
           width: 1,
         ),
       ),
       focusedErrorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(8),
         borderSide: BorderSide(
-          color: AppColor.accent_50, // Same for both themes
+          color:
+              isDark
+                  ? AppColor.neutral_60
+                  : AppColor.black, // Same for both themes
           width: 1,
         ),
       ),
       labelStyle: TextStyle(
+        color: isDark ? AppColor.neutral_60 : AppColor.neutral_40,
+        fontSize: 14,
+        fontFamily: AppFontFamily.poppinsMedium,
+      ),
+      hintStyle: TextStyle(
         color: isDark ? AppColor.neutral_60 : AppColor.neutral_40,
         fontSize: 14,
         fontFamily: AppFontFamily.poppinsMedium,
@@ -478,12 +630,66 @@ class AppInputDecoration {
         fontFamily: AppFontFamily.poppinsMedium,
       ),
       errorStyle: TextStyle(
-        color: AppColor.accent_50,
+        color: isDark ? AppColor.neutral_40 : AppColor.black,
         fontSize: 10,
         fontFamily: AppFontFamily.poppinsMedium,
       ),
-      suffixIconColor: isDark ? AppColor.neutral_70 : AppColor.neutral_70,
-      prefixIconColor: isDark ? AppColor.neutral_70 : AppColor.neutral_70,
+      suffixIconColor: isDark ? AppColor.neutral_70 : AppColor.neutral_20,
+      prefixIconColor: isDark ? AppColor.neutral_70 : AppColor.neutral_20,
+    );
+  }
+
+  static Widget buildCountryCodeButton(
+    BuildContext context,
+    CountryCode? country,
+  ) {
+    return Container(
+      foregroundDecoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 10),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(4),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  blurRadius: 2,
+                  offset: const Offset(0, 1),
+                ),
+              ],
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(4),
+              child:
+                  country?.flagUri != null
+                      ? Image.asset(
+                        country!.flagUri!,
+                        package: 'country_code_picker',
+                        width: 30,
+                        height: 20,
+                        fit: BoxFit.cover,
+                      )
+                      : Container(
+                        width: 30,
+                        height: 20,
+                        color: Colors.grey[200],
+                      ),
+            ),
+          ),
+          const SizedBox(width: 8),
+          Text(
+            country?.dialCode ?? '+91',
+            style: inputTextStyle(context),
+            // style: AppInputDecoration.inputTextStyle(context),
+          ),
+          SizedBox(width: 8),
+          Icon(Icons.keyboard_arrow_down_rounded, size: 22),
+        ],
+      ),
     );
   }
 }

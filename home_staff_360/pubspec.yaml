@@ -18,6 +18,15 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # of the product and file versions while build-number is used as the build suffix.
 version: 1.0.0+1
 
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/logo.png"  # Path to your icon file
+  # Optional configurations:
+  adaptive_icon_background: "#FFFFFF"  # Android adaptive icon background
+  adaptive_icon_foreground: "assets/images/logo.png"
+  min_sdk_android: 21  # Minimum Android SDK for adaptive icons
+
 environment:
   sdk: ^3.7.2
 
@@ -34,6 +43,11 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
+  country_code_picker: ^3.3.0
+  lottie: ^2.3.1
+  animated_text_kit: ^4.2.2
+  smooth_page_indicator: ^1.1.0
+  http: ^0.13.6
 
 dev_dependencies:
   flutter_test:
@@ -45,6 +59,7 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^5.0.0
+  flutter_launcher_icons: ^0.13.1
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
