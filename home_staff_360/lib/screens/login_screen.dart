@@ -71,8 +71,9 @@ class _LoginScreenState extends State<LoginScreen> {
             Image.asset(AppTheme.appLogo(context), height: 100, width: 100),
             SizedBox(height: 40),
             Text(
-              "Login or Register to Your Account",
+              "Login/New User to Home Staff 360",
               style: AppTheme.textTitle(context),
+              textAlign: TextAlign.center,
             ),
 
             SizedBox(height: 20),
@@ -82,7 +83,7 @@ class _LoginScreenState extends State<LoginScreen> {
               style: AppInputDecoration.inputTextStyle(context),
               keyboardType: TextInputType.phone,
               decoration: InputDecoration(
-                labelText: 'Contact No*',
+                labelText: 'Phone Number*',
                 hintText: 'e.g. 1234567890',
                 counter: const SizedBox.shrink(),
                 prefixIcon: Container(
@@ -122,6 +123,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         dialogBackgroundColor: AppTheme.screenBg(context),
                         headerTextStyle: AppTheme.textTitle(context),
+                        headerText: 'Select Country/Region',
                         dialogSize: Size(
                           MediaQuery.of(context).size.width * 0.9,
                           400,
@@ -141,11 +143,11 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return 'Please enter your contact number';
+                  return 'Please enter your phone number';
                 } else if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
                   return 'Only digits allowed';
                 } else if (value.length < 8) {
-                  return 'Number too short';
+                  return 'Phone Number too short';
                 }
                 return null;
               },
@@ -215,30 +217,36 @@ class _LoginScreenState extends State<LoginScreen> {
             //   ],
             // ),
             // SizedBox(height: 16),
-            RichText(
-              text: TextSpan(
-                style: AppTheme.textLabel(context),
-                children: [
-                  TextSpan(text: 'By register, you agree to our '),
-                  TextSpan(
-                    text: 'Terms & Condition, ',
-                    style: AppTheme.textLink(context),
-                  ),
-                  TextSpan(
-                    text: 'Data Policy ',
-                    style: AppTheme.textLink(context),
-                  ),
-                  TextSpan(text: 'and '),
-                  TextSpan(
-                    text: 'Cookies Policy.',
-                    style: AppTheme.textLink(context),
-                  ),
-                ],
-              ),
+            // RichText(
+            //   textAlign: TextAlign.center,
+            //   text: TextSpan(
+            //     style: AppTheme.textLabel(context),
+            //     children: [
+            //       TextSpan(text: 'By register, you agree to our '),
+            //       TextSpan(
+            //         text: 'Terms & Condition, ',
+            //         style: AppTheme.textLink(context),
+            //       ),
+            //       TextSpan(
+            //         text: 'Data Policy ',
+            //         style: AppTheme.textLink(context),
+            //       ),
+            //       TextSpan(text: 'and '),
+            //       TextSpan(
+            //         text: 'Cookies Policy.',
+            //         style: AppTheme.textLink(context),
+            //       ),
+            //     ],
+            //   ),
+            // ),
+            Text(
+              "We'll call or text you to confirm your number. Standard message and data rates may apply.",
+              style: AppTheme.textLabel(context).copyWith(fontSize: 12),
+              textAlign: TextAlign.center,
             ),
             SizedBox(height: 20),
             FlatButton(
-              text: 'Login',
+              text: 'Continue',
               disabled: !_isFormValid || _isLoading,
               onPressed:
                   (_isFormValid && !_isLoading)

@@ -154,7 +154,11 @@ class _SignupScreenState extends State<SignupScreen> {
           children: [
             Image.asset(AppTheme.appLogo(context), height: 100, width: 100),
             const SizedBox(height: 40),
-            Text("Register", style: AppTheme.textTitle(context)),
+            Text(
+              "Confirm Your Name",
+              style: AppTheme.textTitle(context),
+              textAlign: TextAlign.center,
+            ),
             const SizedBox(height: 20),
             TextFormField(
               controller: _nameController,
@@ -179,29 +183,42 @@ class _SignupScreenState extends State<SignupScreen> {
               maxLength: 20,
             ),
             const SizedBox(height: 16),
-            FlatButton(
-              text: 'Next',
-              disabled: !_isFormValid || _isLoading,
-              onPressed:
-                  (_isFormValid && !_isLoading)
-                      ? () {
-                        if (_validateCurrentStep()) {
-                          setState(() => _currentStep = 1);
-                        }
-                      }
-                      : null,
-              loading: _isLoading,
-            ),
-            const SizedBox(height: 16),
-            OutlineButton(
-              text: 'Cancel',
-              disabled: _isLoading,
-              onPressed:
-                  _isLoading
-                      ? null
-                      : () {
-                        Navigator.pop(context);
-                      },
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              spacing: 16,
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: OutlineButton(
+                    text: 'Cancel',
+                    disabled: _isLoading,
+                    onPressed:
+                        _isLoading
+                            ? null
+                            : () {
+                              Navigator.pop(context);
+                            },
+                  ),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: FlatButton(
+                    text: 'Next',
+                    disabled: !_isFormValid || _isLoading,
+                    onPressed:
+                        (_isFormValid && !_isLoading)
+                            ? () {
+                              if (_validateCurrentStep()) {
+                                setState(() => _currentStep = 1);
+                              }
+                            }
+                            : null,
+                    loading: _isLoading,
+                    icon: Icons.arrow_forward_ios_rounded,
+                    iconLeft: false,
+                  ),
+                ),
+              ],
             ),
           ],
         ),
@@ -220,7 +237,11 @@ class _SignupScreenState extends State<SignupScreen> {
           children: [
             Image.asset(AppTheme.appLogo(context), height: 100, width: 100),
             const SizedBox(height: 40),
-            Text("Where are you located?", style: AppTheme.textTitle(context)),
+            Text(
+              "Where are you located?",
+              style: AppTheme.textTitle(context),
+              textAlign: TextAlign.center,
+            ),
             const SizedBox(height: 20),
             DropdownButtonFormField<String>(
               value: _selectedCountry.isEmpty ? null : _selectedCountry,
@@ -230,12 +251,14 @@ class _SignupScreenState extends State<SignupScreen> {
                       ? [
                         DropdownMenuItem(
                           value: null,
-                          child: SizedBox(
-                            width: 24,
-                            height: 24,
-                            child: CircularProgressIndicator(
-                              color: AppTheme.inputProgress(context),
-                              strokeWidth: 2,
+                          child: Center(
+                            child: SizedBox(
+                              width: 24,
+                              height: 24,
+                              child: CircularProgressIndicator(
+                                color: AppTheme.inputProgress(context),
+                                strokeWidth: 2,
+                              ),
                             ),
                           ),
                         ),
@@ -261,6 +284,7 @@ class _SignupScreenState extends State<SignupScreen> {
               },
               validator:
                   (value) => value == null ? 'Please select a country' : null,
+              icon: const Icon(Icons.arrow_drop_down_rounded),
             ),
             const SizedBox(height: 16),
             DropdownButtonFormField<String>(
@@ -271,12 +295,14 @@ class _SignupScreenState extends State<SignupScreen> {
                       ? [
                         DropdownMenuItem(
                           value: null,
-                          child: SizedBox(
-                            width: 24,
-                            height: 24,
-                            child: CircularProgressIndicator(
-                              color: AppTheme.inputProgress(context),
-                              strokeWidth: 2,
+                          child: Center(
+                            child: SizedBox(
+                              width: 24,
+                              height: 24,
+                              child: CircularProgressIndicator(
+                                color: AppTheme.inputProgress(context),
+                                strokeWidth: 2,
+                              ),
                             ),
                           ),
                         ),
@@ -303,6 +329,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       },
               validator:
                   (value) => value == null ? 'Please select a state' : null,
+                  icon: const Icon(Icons.arrow_drop_down_rounded),
             ),
             const SizedBox(height: 16),
             DropdownButtonFormField<String>(
@@ -313,12 +340,14 @@ class _SignupScreenState extends State<SignupScreen> {
                       ? [
                         DropdownMenuItem(
                           value: null,
-                          child: SizedBox(
-                            width: 24,
-                            height: 24,
-                            child: CircularProgressIndicator(
-                              color: AppTheme.inputProgress(context),
-                              strokeWidth: 2,
+                          child: Center(
+                            child: SizedBox(
+                              width: 24,
+                              height: 24,
+                              child: CircularProgressIndicator(
+                                color: AppTheme.inputProgress(context),
+                                strokeWidth: 2,
+                              ),
                             ),
                           ),
                         ),
@@ -340,37 +369,50 @@ class _SignupScreenState extends State<SignupScreen> {
                       },
               validator:
                   (value) => value == null ? 'Please select a city' : null,
+                  icon: const Icon(Icons.arrow_drop_down_rounded),
             ),
             const SizedBox(height: 20),
-            FlatButton(
-              text: 'Complete Registration',
-              disabled: !_isFormValid || _isLoading,
-              onPressed:
-                  (_isFormValid && !_isLoading)
-                      ? () async {
-                        if (!_validateCurrentStep()) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Please complete all fields'),
-                            ),
-                          );
-                          return;
-                        }
-                        await _submitCompleteForm();
-                      }
-                      : null,
-              loading: _isLoading,
-            ),
-            const SizedBox(height: 16),
-            OutlineButton(
-              text: 'Back',
-              disabled: _isLoading,
-              onPressed: () {
-                setState(() {
-                  _currentStep = 0;
-                  _validateForm();
-                });
-              },
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              spacing: 16,
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: OutlineButton(
+                    text: 'Back',
+                    disabled: _isLoading,
+                    onPressed: () {
+                      setState(() {
+                        _currentStep = 0;
+                        _validateForm();
+                      });
+                    },
+                    icon: Icons.arrow_back_ios_rounded,
+                  ),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: FlatButton(
+                    text: 'Register',
+                    disabled: !_isFormValid || _isLoading,
+                    onPressed:
+                        (_isFormValid && !_isLoading)
+                            ? () async {
+                              if (!_validateCurrentStep()) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Please complete all fields'),
+                                  ),
+                                );
+                                return;
+                              }
+                              await _submitCompleteForm();
+                            }
+                            : null,
+                    loading: _isLoading,
+                  ),
+                ),
+              ],
             ),
           ],
         ),

@@ -169,14 +169,18 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
         children: [
           Image.asset(AppTheme.appLogo(context), height: 100, width: 100),
           const SizedBox(height: 40),
-          Text("Verify Your Number", style: AppTheme.textTitle(context)),
+          Text(
+            "Confirm Your Number",
+            style: AppTheme.textTitle(context),
+            textAlign: TextAlign.center,
+          ),
           const SizedBox(height: 20),
           RichText(
             textAlign: TextAlign.center,
             text: TextSpan(
               style: AppTheme.textLabel(context),
               children: [
-                TextSpan(text: "We sent a code to "),
+                TextSpan(text: "Enter the code we sent over SMS to "),
                 TextSpan(
                   text: "${widget.countryCode} ${widget.phoneNumber}",
                   style: AppTheme.textLink(context),
@@ -184,7 +188,7 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
               ],
             ),
           ),
-          const SizedBox(height: 40),
+          const SizedBox(height: 16),
 
           // OTP Input Fields
           Row(
@@ -238,7 +242,7 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
           const SizedBox(height: 30),
 
           FlatButton(
-            text: 'Verify',
+            text: 'Continue',
             disabled: !_isOTPComplete || _isLoading,
             onPressed: _isOTPComplete ? _verifyOTP : null,
             loading: _isLoading,
@@ -248,7 +252,7 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text("Didn't receive code?", style: AppTheme.textLabel(context)),
+              Text("Didn't get a code?", style: AppTheme.textLabel(context)),
               const SizedBox(width: 8),
               _resendTimeout > 0
                   ? Text(
